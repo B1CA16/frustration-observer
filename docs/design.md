@@ -52,7 +52,7 @@ interface Detector {
   onEnter?(target: Element, ev: MouseEvent): void;
   onLeave?(target: Element): void;
   onUnobserve?(target: Element): void; // drop per-element state
-  destroy(): void;                     // clear timers, release resources
+  destroy(): void; // clear timers, release resources
 }
 ```
 
@@ -97,11 +97,11 @@ keeps the default interval and radius. Any detector can be disabled with
 
 ### Defaults
 
-| Detector | Defaults |
-| --- | --- |
-| `rageClick` | `clicks: 3`, `interval: 1000`, `radius: 30` |
-| `hesitation` | `threshold: 2000` |
-| `deadClick` | `timeout: 1000`, `ignore: undefined` |
+| Detector     | Defaults                                    |
+| ------------ | ------------------------------------------- |
+| `rageClick`  | `clicks: 3`, `interval: 1000`, `radius: 30` |
+| `hesitation` | `threshold: 2000`                           |
+| `deadClick`  | `timeout: 1000`, `ignore: undefined`        |
 
 ### Event payloads
 
@@ -134,7 +134,7 @@ interface DeadClickEvent {
 Click timestamps and coordinates are kept in a rolling window per element,
 pruned to `interval`. Once `clicks` clicks fall inside the window and within
 `radius` pixels of the first, the burst is marked live and an emit is scheduled
-for `interval` ms after the *last* click. Further clicks reschedule it and grow
+for `interval` ms after the _last_ click. Further clicks reschedule it and grow
 the count.
 
 The result is one event per burst reporting the true total, at the cost of

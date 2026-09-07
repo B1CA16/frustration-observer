@@ -1,0 +1,61 @@
+{
+  "name": "interaction-observer",
+  "version": "0.0.0",
+  "description": "Detect rage clicks, hesitation and dead clicks on any DOM element. Framework-agnostic, zero dependencies.",
+  "keywords": [
+    "rage-click",
+    "dead-click",
+    "hesitation",
+    "interaction",
+    "observer",
+    "ux",
+    "frustration",
+    "browser",
+    "dom",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Francisco Ferreira",
+  "homepage": "https://github.com/B1CA16/interaction-observer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/B1CA16/interaction-observer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/B1CA16/interaction-observer/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}
