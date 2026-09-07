@@ -190,6 +190,30 @@ These are properties of browser-side detection, not bugs to be fixed later.
 - **Hesitation requires a hover-capable pointer** and therefore effectively does
   not fire on touch devices.
 
+## Code conventions
+
+The published package includes `src`, so the source is part of what ships.
+Comments are written accordingly, in two tiers.
+
+**Exported API uses TSDoc.** Every exported function, type and property carries
+a TSDoc block, because that text is what appears in a consumer's editor when
+they use the package — it is the documentation most users will ever read. Every
+duration states its unit, `@throws` documents the error cases, and the entry
+point carries an `@example`.
+
+**Internal comments explain why, never what.** The code already states what it
+does; a comment restating it adds noise and goes stale. Comments are reserved
+for reasoning that the code cannot express — why an operation happens in this
+order, why an edge case is handled this way.
+
+Three further rules:
+
+- every file opens with a one or two line header describing its responsibility
+- every detector file states the precise contract it implements, mirroring the
+  detector contracts above
+- no commented-out code, and no `TODO` comments in a release — a TODO is either
+  work to do now or an entry in Future Ideas
+
 ## Testing strategy
 
 Vitest with jsdom and fake timers. Each detector is tested through the public
