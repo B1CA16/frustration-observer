@@ -52,7 +52,7 @@ interface Detector {
   onEnter?(target: Element, ev: MouseEvent): void;
   onLeave?(target: Element): void;
   onUnobserve?(target: Element): void; // drop per-element state
-  destroy(): void; // clear timers, release resources
+  reset(): void; // drop pending state and timers; reusable afterwards
 }
 ```
 
@@ -66,6 +66,9 @@ unit-testable in isolation.
 - **`disconnect()` is reusable.** It detaches listeners, clears all state and
   cancels pending timers; a later `observe()` re-attaches. This mirrors
   `MutationObserver` rather than inventing a permanently-disposed state.
+- **Listeners run in the capture phase.** A page handler that calls
+  `stopPropagation()` would otherwise hide the very clicks this library exists
+  to notice.
 - **Observed elements are held in a `Set`.** Removing an element from the DOM
   without calling `unobserve()` keeps it alive. This is documented rather than
   worked around; per-element detector state lives in `WeakMap`s.
