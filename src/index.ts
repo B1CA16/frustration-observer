@@ -1,5 +1,7 @@
 // Public entry point of the package.
 
+import type { Detector } from "./detector.js";
+import { createRageClickDetector } from "./detectors/rage-click.js";
 import { createObserver } from "./observer.js";
 import { resolveOptions } from "./options.js";
 import type {
@@ -28,10 +30,15 @@ export function createInteractionObserver(
 ): InteractionObserver {
   // Validating at creation means a mistake throws here, next to the code that
   // caused it, rather than showing up later as detection that never fires.
-  resolveOptions(options);
+  const resolved = resolveOptions(options);
 
-  // Detectors are added in the milestones that follow.
-  return createObserver(() => []);
+  return createObserver((emit) => {
+    const detectors: Detector[] = [];
+    if (resolved.rageClick) {
+      detectors.push(createRageClickDetector(resolved.rageClick, emit));
+    }
+    return detectors;
+  });
 }
 
 export type {

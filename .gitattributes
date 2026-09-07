@@ -1,0 +1,4 @@
+# Keep line endings identical everywhere: LF in the repository and in the
+# working tree, on every platform. Without this, Windows checkouts get CRLF
+# while Prettier writes LF, and every formatted file looks modified.
+* text=auto eol=lf
