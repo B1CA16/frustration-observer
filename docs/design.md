@@ -71,7 +71,10 @@ unit-testable in isolation.
   to notice.
 - **Observed elements are held in a `Set`.** Removing an element from the DOM
   without calling `unobserve()` keeps it alive. This is documented rather than
-  worked around; per-element detector state lives in `WeakMap`s.
+  worked around. Detectors key their per-element state by the same elements,
+  in a `Map` rather than a `WeakMap`: the registry already holds them, and
+  cancelling every pending timer on `disconnect()` requires state that can be
+  iterated.
 
 ## Public API
 
