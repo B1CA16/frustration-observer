@@ -2,8 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/frustration-observer)](https://www.npmjs.com/package/frustration-observer)
 [![CI](https://github.com/B1CA16/frustration-observer/actions/workflows/ci.yml/badge.svg)](https://github.com/B1CA16/frustration-observer/actions/workflows/ci.yml)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/frustration-observer)](https://bundlephobia.com/package/frustration-observer)
-[![license](https://img.shields.io/npm/l/frustration-observer)](LICENSE)
+[![minzipped size](https://img.shields.io/bundlejs/size/frustration-observer)](https://bundlejs.com/?q=frustration-observer)
+[![license](https://img.shields.io/npm/l/frustration-observer?cacheSeconds=3600)](LICENSE)
 
 Detect rage clicks, hesitation and dead clicks on any DOM element. 2.4 KB
 minified and gzipped, no dependencies, no framework.
