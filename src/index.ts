@@ -1,6 +1,7 @@
 // Public entry point of the package.
 
 import type { Detector } from "./detector.js";
+import { createDeadClickDetector } from "./detectors/dead-click.js";
 import { createHesitationDetector } from "./detectors/hesitation.js";
 import { createRageClickDetector } from "./detectors/rage-click.js";
 import { createObserver } from "./observer.js";
@@ -40,6 +41,9 @@ export function createInteractionObserver(
     }
     if (resolved.hesitation) {
       detectors.push(createHesitationDetector(resolved.hesitation, emit));
+    }
+    if (resolved.deadClick) {
+      detectors.push(createDeadClickDetector(resolved.deadClick, emit));
     }
     return detectors;
   });
