@@ -168,10 +168,18 @@ cancels it:
 If the window elapses untouched, the event fires. At most one check is pending
 per element, so a rage burst produces one dead click rather than seven.
 
-A single `MutationObserver` watches `document` with
-`subtree`/`childList`/`attributes`/`characterData`, and runs only while at
-least one dead-click check is pending. Nothing observes anything while the page
-is idle.
+Only mutations need a live subscription. A single `MutationObserver` watches
+`document` with `subtree`/`childList`/`attributes`/`characterData`, and runs
+only while at least one dead-click check is pending, so nothing observes
+anything while the page is idle.
+
+Navigation and scrolling are handled by comparison instead of subscription: the
+click records `location.href` and the scroll position, and the timeout compares
+them when it fires. This avoids a scroll listener on a high-frequency event,
+and catches SPA navigations that emit no event at all without having to patch
+`history.pushState`. The trade is that a change which reverts within the
+timeout — scrolling away and back — is not counted, which is arguably the right
+answer anyway.
 
 ## Error handling
 
