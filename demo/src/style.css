@@ -1,0 +1,833 @@
+/* One rule carries the whole page: dark is the library, light is the app being
+   watched. The hero and the inspector share a palette because they are the
+   same thing at two moments; the checkout is deliberately ordinary. */
+
+:root {
+  /* The library */
+  --lib: #0f1620;
+  --lib-raised: #172130;
+  --lib-edge: #26313f;
+  --lib-ink: #eaf0f7;
+  --lib-ink-2: #9aaaba;
+
+  /* The app being watched */
+  --app: #eef1f5;
+  --card: #ffffff;
+  --edge: #dce2e9;
+  --ink: #111923;
+  --ink-2: #4d5a6b;
+  --brand: #2a55f0;
+
+  /* Signals */
+  --rage: #ff6f4d;
+  --hesitate: #ffc857;
+  --dead: #a9b4ff;
+
+  --sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", "Consolas", ui-monospace, monospace;
+  --wide: 1180px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--app);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.15;
+}
+
+p,
+dl,
+dd,
+dt {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ==================================================================== hero */
+
+.hero {
+  background: var(--lib);
+  color: var(--lib-ink);
+}
+
+.hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 68px 24px 56px;
+}
+
+.hero__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.hero h1 {
+  font-size: clamp(2.3rem, 1.4rem + 3.4vw, 3.5rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 118;
+  letter-spacing: -0.025em;
+}
+
+.lede {
+  max-width: 34ch;
+  margin-top: 18px;
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+  line-height: 1.4;
+  color: var(--lib-ink);
+  text-wrap: balance;
+}
+
+.hero__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.install {
+  padding: 11px 15px;
+  border: 1px solid var(--lib-edge);
+  border-radius: 6px;
+  background: var(--lib-raised);
+  color: var(--lib-ink);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  cursor: copy;
+}
+
+.install[data-copied="true"] {
+  border-color: var(--hesitate);
+  color: var(--hesitate);
+}
+
+.links {
+  display: flex;
+  gap: 16px;
+  font-size: 0.86rem;
+  color: var(--lib-ink-2);
+}
+
+.links a:hover {
+  color: var(--lib-ink);
+}
+
+/* The three definitions, which are the answer to "what is this". */
+.detectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.detector {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 3px 12px;
+  padding: 18px 20px;
+  border: 1px solid var(--lib-edge);
+  border-radius: 8px;
+  background: var(--lib-raised);
+}
+
+.detector[data-signal="rage"] {
+  --signal: var(--rage);
+}
+
+.detector[data-signal="hesitate"] {
+  --signal: var(--hesitate);
+}
+
+.detector[data-signal="dead"] {
+  --signal: var(--dead);
+}
+
+.detector__icon {
+  width: 19px;
+  height: 19px;
+  grid-row: 1 / 3;
+  margin-top: 2px;
+  color: var(--signal);
+}
+
+.detector h2 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.detector p {
+  color: var(--lib-ink-2);
+  font-size: 0.88rem;
+}
+
+.hero__foot {
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* ================================================================== try it */
+
+.tryit {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 56px 24px 24px;
+}
+
+.tryit__head {
+  margin-bottom: 26px;
+}
+
+.tryit h2 {
+  font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.95rem);
+  font-weight: 600;
+  font-variation-settings: "wdth" 108;
+  letter-spacing: -0.015em;
+}
+
+.tryit__head p {
+  max-width: 62ch;
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+
+/* The inspector is kept shorter than the checkout on purpose: the code block
+   lives below rather than inside it. That lets it stay its natural height and
+   follow the page as you scroll, instead of dictating the row height and
+   leaving the checkout stretched above a gap. */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(310px, 380px);
+  align-items: start;
+  gap: 22px;
+}
+
+/* ========================================================= the checkout */
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* Keeps the page taller than the inspector even before any signal arrives,
+     so the sticky panel always has room to travel. */
+  min-height: 560px;
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  background: var(--card);
+  overflow: hidden;
+  box-shadow: 0 10px 26px -18px rgba(17, 25, 35, 0.4);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--edge);
+  background: #f6f8fa;
+}
+
+.chrome__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d3dae2;
+}
+
+.chrome__url {
+  margin-left: 10px;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px clamp(20px, 4vw, 38px) 30px;
+}
+
+/* Pinned to the bottom of the card, so whatever height the row ends up at,
+   the slack sits between the form and a closing edge instead of trailing off.
+   Real checkouts end this way, and the support button is one more control
+   that does nothing. */
+.paybar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding: 15px clamp(20px, 4vw, 38px);
+  border-top: 1px solid var(--edge);
+  background: #f6f8fa;
+  color: var(--ink-2);
+  font-size: 0.8rem;
+}
+
+.linkish {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: #c3ccd7;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.linkish:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+.checkout h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 18px;
+  border: 1px solid var(--edge);
+  border-radius: 7px;
+}
+
+.line__name {
+  font-weight: 600;
+}
+
+.line__meta {
+  max-width: 44ch;
+  margin-top: 3px;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+}
+
+.line__price {
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.promo label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.promo__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.promo input {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--edge);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.93rem;
+}
+
+.promo input::placeholder {
+  color: #93a1b0;
+}
+
+.button {
+  padding: 11px 18px;
+  border: 1px solid var(--edge);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.93rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: #c3ccd7;
+  background: #f6f8fa;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.totals dt {
+  color: var(--ink-2);
+}
+
+.totals__due {
+  padding-top: 10px;
+  border-top: 1px solid var(--edge);
+  font-weight: 600;
+}
+
+.totals__due dt {
+  color: var(--ink);
+}
+
+.cta {
+  padding: 16px 22px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--brand);
+  color: #fff;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cta:hover {
+  background: #1f47db;
+}
+
+.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.saved {
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* ============================================================= inspector */
+
+.pane {
+  position: sticky;
+  top: 20px;
+  min-width: 0;
+}
+
+.inspector {
+  min-width: 0;
+  border: 1px solid var(--lib-edge);
+  border-radius: 10px;
+  background: var(--lib);
+  color: var(--lib-ink);
+  overflow: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lib-edge) transparent;
+}
+
+.inspector ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.inspector ::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--lib-edge);
+}
+
+.inspector__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--lib-edge);
+}
+
+.inspector__head h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.tally {
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gauges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gauge {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--lib-edge);
+}
+
+.gauge[data-signal="rage"] {
+  --signal: var(--rage);
+}
+
+.gauge[data-signal="hesitate"] {
+  --signal: var(--hesitate);
+}
+
+.gauge[data-signal="dead"] {
+  --signal: var(--dead);
+}
+
+.gauge__icon {
+  width: 17px;
+  height: 17px;
+  grid-row: 1 / 3;
+  color: #64748b;
+}
+
+.gauge[data-state="live"] .gauge__icon,
+.gauge[data-state="hit"] .gauge__icon {
+  color: var(--signal);
+}
+
+.gauge__name {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.gauge__readout {
+  grid-column: 2 / 4;
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gauge[data-state="live"] .gauge__readout,
+.gauge[data-state="hit"] .gauge__readout {
+  color: var(--signal);
+}
+
+.gauge__dots {
+  display: flex;
+  gap: 5px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--lib-edge);
+  border-radius: 50%;
+}
+
+.dot[data-lit="true"] {
+  border-color: var(--signal);
+  background: var(--signal);
+}
+
+.gauge__track {
+  width: 72px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--lib-edge);
+  overflow: hidden;
+}
+
+.gauge__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--signal);
+  transition: width 90ms linear;
+}
+
+.inspector__block {
+  border-bottom: 1px solid var(--lib-edge);
+}
+
+.inspector__block:last-of-type {
+  border-bottom: 0;
+}
+
+.inspector__block h4 {
+  padding: 14px 18px 10px;
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.69rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* Capped in script rather than scrolled: a scrollbar in a panel this size is
+   more chrome than the content is worth. The minimum height reserves room for
+   the first two signals so the panel does not jump as they arrive. */
+.feed {
+  list-style: none;
+  min-height: 96px;
+  margin: 0;
+  padding: 0 0 6px;
+}
+
+.feed__empty {
+  padding: 0 18px 16px;
+  color: var(--lib-ink-2);
+  font-size: 0.82rem;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 11px 18px;
+  animation: arrive 200ms ease-out;
+}
+
+.event[data-signal="rage"] {
+  --signal: var(--rage);
+}
+
+.event[data-signal="hesitate"] {
+  --signal: var(--hesitate);
+}
+
+.event[data-signal="dead"] {
+  --signal: var(--dead);
+}
+
+.event__icon {
+  width: 15px;
+  height: 15px;
+  grid-row: 1 / 3;
+  margin-top: 3px;
+  color: var(--signal);
+}
+
+.event__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--signal);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.event__time {
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+}
+
+.event__facts {
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.event__target {
+  color: var(--lib-ink);
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+/* ================================================================= usage */
+
+/* Both cards stretch, so whatever slack the shorter one has sits inside a
+   bounded card rather than trailing off into the page. */
+.usage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.usage__code {
+  min-width: 0;
+  border: 1px solid var(--lib-edge);
+  border-radius: 10px;
+  background: var(--lib);
+  color: var(--lib-ink);
+}
+
+.usage__code h3 {
+  padding: 15px 18px 10px;
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.69rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.code {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 18px 18px;
+  overflow-x: auto;
+  color: var(--lib-ink-2);
+  font-family: var(--mono);
+  font-size: 0.71rem;
+  line-height: 1.8;
+  tab-size: 2;
+}
+
+.code b {
+  color: var(--lib-ink);
+  font-weight: 400;
+}
+
+.code i {
+  color: var(--hesitate);
+  font-style: normal;
+}
+
+.limits {
+  min-width: 0;
+  padding: 15px 20px 20px;
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.limits h3 {
+  margin-bottom: 12px;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 0.69rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.limits ul {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.limits li {
+  color: var(--ink-2);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.limits strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.limits code {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+/* ================================================================ footer */
+
+.footer {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 30px 24px 44px;
+  color: var(--ink-2);
+  font-size: 0.83rem;
+}
+
+.footer p {
+  max-width: 74ch;
+  padding-top: 26px;
+  border-top: 1px solid var(--edge);
+}
+
+/* =========================================================== adaptations */
+
+@media (max-width: 900px) {
+  .workbench,
+  .usage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .surface {
+    min-height: 0;
+  }
+
+  .pane {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event {
+    animation: none;
+  }
+
+  .gauge__fill {
+    transition: none;
+  }
+}

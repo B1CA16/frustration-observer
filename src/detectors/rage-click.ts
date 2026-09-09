@@ -3,7 +3,7 @@
 // Contract: clicks on an element are kept in a window that stays open for
 // `interval` ms after each one. Once `clicks` of them sit inside that window,
 // all within `radius` pixels of the first, the burst counts as rage and is
-// reported `interval` ms after the last click — late enough to include every
+// reported `interval` ms after the last click, late enough to include every
 // click of the burst, so one burst produces one event carrying its true count.
 
 import type { Detector } from "../detector.js";

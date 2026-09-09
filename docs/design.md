@@ -1,10 +1,10 @@
-# interaction-observer — V1 design
+# interaction-observer V1 design
 
 A small, framework-agnostic browser library that detects three meaningful user
 interactions with DOM elements: rage clicks, hesitation, and dead clicks.
 
 This document records the design decisions made before implementation, the
-precise contract of each detector, and — just as importantly — what V1
+precise contract of each detector, and, just as importantly, what V1
 deliberately does not do.
 
 ## Goals
@@ -154,7 +154,7 @@ cancels it. If the timer survives `threshold` ms, one event fires while the
 pointer is still inside. Re-entering the element starts a fresh dwell.
 
 Pointer movement between child nodes of the observed element does not restart
-the dwell — this is the detector's most likely bug and has a dedicated test.
+the dwell. This is the detector's most likely bug, and has a dedicated test.
 
 ### deadclick
 
@@ -178,7 +178,7 @@ click records `location.href` and the scroll position, and the timeout compares
 them when it fires. This avoids a scroll listener on a high-frequency event,
 and catches SPA navigations that emit no event at all without having to patch
 `history.pushState`. The trade is that a change which reverts within the
-timeout — scrolling away and back — is not counted, which is arguably the right
+timeout, such as scrolling away and back, is not counted, which is arguably the right
 answer anyway.
 
 ## Error handling
@@ -196,7 +196,7 @@ These are properties of browser-side detection, not bugs to be fixed later.
 - **Dead clicks cannot be detected on continuously mutating pages.** A live
   clock, carousel or chatty third-party script counts as activity and will
   suppress every dead click. The `ignore` selector mitigates the common cases.
-- **A click whose only effect is outside the DOM looks dead** — clipboard
+- **A click whose only effect is outside the DOM looks dead.** Clipboard
   writes, audio playback and analytics beacons are indistinguishable from
   nothing happening.
 - **Slow asynchronous responses look dead.** A click that triggers a two-second
@@ -211,13 +211,13 @@ Comments are written accordingly, in two tiers.
 
 **Exported API uses TSDoc.** Every exported function, type and property carries
 a TSDoc block, because that text is what appears in a consumer's editor when
-they use the package — it is the documentation most users will ever read. Every
+they use the package, and it is the documentation most users will ever read. Every
 duration states its unit, `@throws` documents the error cases, and the entry
 point carries an `@example`.
 
 **Internal comments explain why, never what.** The code already states what it
 does; a comment restating it adds noise and goes stale. Comments are reserved
-for reasoning that the code cannot express — why an operation happens in this
+for reasoning that the code cannot express: why an operation happens in this
 order, why an edge case is handled this way.
 
 Three further rules:
@@ -225,7 +225,7 @@ Three further rules:
 - every file opens with a one or two line header describing its responsibility
 - every detector file states the precise contract it implements, mirroring the
   detector contracts above
-- no commented-out code, and no `TODO` comments in a release — a TODO is either
+- no commented-out code, and no `TODO` comments in a release. A TODO is either
   work to do now or an entry in Future Ideas
 
 ## Testing strategy
