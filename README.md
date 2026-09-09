@@ -1,17 +1,17 @@
-# interaction-observer
+# frustration-observer
 
-[![npm](https://img.shields.io/npm/v/interaction-observer)](https://www.npmjs.com/package/interaction-observer)
-[![CI](https://github.com/B1CA16/interaction-observer/actions/workflows/ci.yml/badge.svg)](https://github.com/B1CA16/interaction-observer/actions/workflows/ci.yml)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/interaction-observer)](https://bundlephobia.com/package/interaction-observer)
-[![license](https://img.shields.io/npm/l/interaction-observer)](LICENSE)
+[![npm](https://img.shields.io/npm/v/frustration-observer)](https://www.npmjs.com/package/frustration-observer)
+[![CI](https://github.com/B1CA16/frustration-observer/actions/workflows/ci.yml/badge.svg)](https://github.com/B1CA16/frustration-observer/actions/workflows/ci.yml)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/frustration-observer)](https://bundlephobia.com/package/frustration-observer)
+[![license](https://img.shields.io/npm/l/frustration-observer)](LICENSE)
 
 Detect rage clicks, hesitation and dead clicks on any DOM element. 2.4 KB
 minified and gzipped, no dependencies, no framework.
 
-**[Try the live demo](https://b1ca16.github.io/interaction-observer/)**
+**[Try the live demo](https://b1ca16.github.io/frustration-observer/)**
 
 ```ts
-import { createInteractionObserver } from "interaction-observer";
+import { createInteractionObserver } from "frustration-observer";
 
 const observer = createInteractionObserver();
 
@@ -44,20 +44,20 @@ development, is entirely up to you.
 ## Install
 
 ```sh
-npm install interaction-observer
+npm install frustration-observer
 ```
 
 Or use it straight from a CDN, which exposes a global called
 `InteractionObserver`:
 
 ```html
-<script src="https://unpkg.com/interaction-observer"></script>
+<script src="https://unpkg.com/frustration-observer"></script>
 ```
 
 ## Usage
 
 ```ts
-import { createInteractionObserver } from "interaction-observer";
+import { createInteractionObserver } from "frustration-observer";
 
 const observer = createInteractionObserver({
   rageClick: { clicks: 3, interval: 1000, radius: 30 },

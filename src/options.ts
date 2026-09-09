@@ -9,7 +9,7 @@ import type {
   RageClickOptions,
 } from "./types.js";
 
-const PREFIX = "[interaction-observer]";
+const PREFIX = "[frustration-observer]";
 
 export interface ResolvedRageClickOptions {
   clicks: number;

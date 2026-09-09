@@ -1,4 +1,4 @@
-# interaction-observer V1 design
+# frustration-observer V1 design
 
 A small, framework-agnostic browser library that detects three meaningful user
 interactions with DOM elements: rage clicks, hesitation, and dead clicks.
@@ -79,7 +79,7 @@ unit-testable in isolation.
 ## Public API
 
 ```ts
-import { createInteractionObserver } from "interaction-observer";
+import { createInteractionObserver } from "frustration-observer";
 
 const observer = createInteractionObserver({
   rageClick: { clicks: 3, interval: 1000, radius: 30 },

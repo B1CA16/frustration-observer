@@ -6,10 +6,10 @@ import { defineConfig } from "vite";
 // prefix. The demo resolves the package to the source next door, which keeps
 // hot reload working while editing the library itself.
 export default defineConfig({
-  base: "/interaction-observer/",
+  base: "/frustration-observer/",
   resolve: {
     alias: {
-      "interaction-observer": fileURLToPath(
+      "frustration-observer": fileURLToPath(
         new URL("../src/index.ts", import.meta.url),
       ),
     },

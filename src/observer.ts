@@ -6,7 +6,7 @@ import type { Detector } from "./detector.js";
 import { createEmitter, type Emit } from "./emitter.js";
 import type { InteractionObserver } from "./types.js";
 
-const PREFIX = "[interaction-observer]";
+const PREFIX = "[frustration-observer]";
 
 // Listeners run in the capture phase, on the way down the tree, so a page
 // handler that calls stopPropagation() cannot hide the interaction from us.

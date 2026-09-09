@@ -62,7 +62,7 @@ export function createEmitter(): Emitter {
           // One broken listener must not stop the others, and must not
           // propagate back into the DOM event that triggered detection.
           console.error(
-            "[interaction-observer] a listener threw while handling an event",
+            "[frustration-observer] a listener threw while handling an event",
             error,
           );
         }

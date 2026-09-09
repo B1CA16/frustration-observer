@@ -14,7 +14,7 @@ import {
   type InteractionEvent,
   type InteractionObserverOptions,
   type InteractionType,
-} from "interaction-observer";
+} from "frustration-observer";
 
 import "./style.css";
 
@@ -342,7 +342,7 @@ drawRage(performance.now());
 // Only numbers from that object are interpolated.
 need("code").innerHTML = `<b>import</b> {
   createInteractionObserver,
-} <b>from</b> "interaction-observer";
+} <b>from</b> "frustration-observer";
 
 <b>const</b> observer = createInteractionObserver({
   rageClick: { clicks: <i>${CONFIG.rageClick.clicks}</i>, interval: <i>${CONFIG.rageClick.interval}</i> },

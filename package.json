@@ -1,5 +1,5 @@
 {
-  "name": "interaction-observer",
+  "name": "frustration-observer",
   "version": "1.0.0",
   "description": "Detect rage clicks, hesitation and dead clicks on any DOM element. Framework-agnostic, zero dependencies.",
   "keywords": [
@@ -16,13 +16,13 @@
   ],
   "license": "MIT",
   "author": "Francisco Ferreira",
-  "homepage": "https://github.com/B1CA16/interaction-observer#readme",
+  "homepage": "https://github.com/B1CA16/frustration-observer#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/B1CA16/interaction-observer.git"
+    "url": "git+https://github.com/B1CA16/frustration-observer.git"
   },
   "bugs": {
-    "url": "https://github.com/B1CA16/interaction-observer/issues"
+    "url": "https://github.com/B1CA16/frustration-observer/issues"
   },
   "type": "module",
   "sideEffects": false,

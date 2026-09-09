@@ -6,7 +6,7 @@
 
 import type { ResolvedDeadClickOptions } from "./options.js";
 
-const PREFIX = "[interaction-observer]";
+const PREFIX = "[frustration-observer]";
 
 export interface ActivityWatcher {
   /** Begins watching. Calling it again while watching does nothing. */
