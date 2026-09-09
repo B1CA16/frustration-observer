@@ -53,7 +53,10 @@
   },
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json && node scripts/copy-cjs-types.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p demo/tsconfig.json --noEmit",
+    "demo:dev": "vite demo",
+    "demo:build": "vite build demo",
+    "demo:preview": "vite preview demo",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
@@ -62,10 +65,12 @@
     "prepublishOnly": "npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {
+    "@types/node": "^22.20.2",
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "tsup": "^8.5.1",
     "typescript": "^7.0.2",
+    "vite": "^8.2.2",
     "vitest": "^5.0.0"
   }
 }

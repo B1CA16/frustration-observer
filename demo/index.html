@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>interaction-observer</title>
+    <meta
+      name="description"
+      content="A 2 KB browser library that detects rage clicks, hesitation and dead clicks on any DOM element. No dependencies, any framework or none."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='7' fill='none' stroke='%23ff6f4d' stroke-width='2.5'/><circle cx='10' cy='10' r='2' fill='%23ff6f4d'/></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-rage" viewBox="0 0 20 20">
+        <path
+          d="M5 3.2 L5 15.6 L8.1 12.5 L10.2 16.4 L12.1 15.4 L10 11.5 L14.4 11.1 Z"
+          fill="currentColor"
+        />
+        <path
+          d="M14.6 5.6 L16.8 3.8 M16.2 9.4 L19 9.2 M11.9 2.6 L12.4 0.4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </symbol>
+      <symbol id="icon-hesitate" viewBox="0 0 20 20">
+        <circle
+          cx="10"
+          cy="10"
+          r="7.2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+        <path
+          d="M10 5.6 L10 10.2 L13.2 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </symbol>
+      <symbol id="icon-dead" viewBox="0 0 20 20">
+        <circle
+          cx="10"
+          cy="10"
+          r="7.2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+        <path
+          d="M5.2 14.8 L14.8 5.2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </symbol>
+    </svg>
+
+    <header class="hero">
+      <div class="hero__inner">
+        <div class="hero__top">
+          <div class="hero__pitch">
+            <h1>interaction-observer</h1>
+            <p class="lede">
+              Your analytics tell you people left. This tells you they were
+              furious when they did.
+            </p>
+          </div>
+
+          <div class="hero__actions">
+            <code class="install" id="install" data-io-ignore
+              >npm i interaction-observer</code
+            >
+            <nav class="links">
+              <a href="https://github.com/B1CA16/interaction-observer"
+                >GitHub</a
+              >
+              <a href="https://www.npmjs.com/package/interaction-observer"
+                >npm</a
+              >
+            </nav>
+          </div>
+        </div>
+
+        <ul class="detectors">
+          <li class="detector" data-signal="rage">
+            <svg class="detector__icon" aria-hidden="true">
+              <use href="#icon-rage" />
+            </svg>
+            <h2>Rage click</h2>
+            <p>Three clicks on the same spot inside one second.</p>
+          </li>
+
+          <li class="detector" data-signal="hesitate">
+            <svg class="detector__icon" aria-hidden="true">
+              <use href="#icon-hesitate" />
+            </svg>
+            <h2>Hesitation</h2>
+            <p>The pointer resting on something for two seconds.</p>
+          </li>
+
+          <li class="detector" data-signal="dead">
+            <svg class="detector__icon" aria-hidden="true">
+              <use href="#icon-dead" />
+            </svg>
+            <h2>Dead click</h2>
+            <p>A click, then a second in which nothing changes.</p>
+          </li>
+        </ul>
+
+        <p class="hero__foot">
+          2&nbsp;KB, zero dependencies, works with any framework or none.
+        </p>
+      </div>
+    </header>
+
+    <main class="tryit">
+      <header class="tryit__head">
+        <h2>See it work</h2>
+        <p>
+          This checkout is real, and instrumented with the code below. Three of
+          its controls do nothing at all. Use it the way an annoyed customer
+          would, and watch the panel beside it.
+        </p>
+      </header>
+
+      <div class="workbench">
+        <section class="surface" aria-label="Example checkout">
+          <div class="chrome" aria-hidden="true">
+            <span class="chrome__dot"></span>
+            <span class="chrome__dot"></span>
+            <span class="chrome__dot"></span>
+            <span class="chrome__url">example.shop/checkout</span>
+          </div>
+
+          <div class="checkout">
+            <h3>Order summary</h3>
+
+            <div class="line" id="plan" data-label="Pro plan">
+              <div>
+                <p class="line__name">Pro plan</p>
+                <p class="line__meta">
+                  Billed yearly. Cancels automatically, probably, if you can
+                  find the setting.
+                </p>
+              </div>
+              <p class="line__price">€49</p>
+            </div>
+
+            <div class="promo">
+              <label for="promo-code">Promo code</label>
+              <div class="promo__row">
+                <input
+                  id="promo-code"
+                  type="text"
+                  placeholder="SPRING25"
+                  autocomplete="off"
+                />
+                <button class="button" id="apply" data-label="Apply code">
+                  Apply
+                </button>
+              </div>
+            </div>
+
+            <dl class="totals">
+              <div>
+                <dt>Subtotal</dt>
+                <dd>€49.00</dd>
+              </div>
+              <div>
+                <dt>VAT</dt>
+                <dd>€11.27</dd>
+              </div>
+              <div class="totals__due">
+                <dt>Due today</dt>
+                <dd>€60.27</dd>
+              </div>
+            </dl>
+
+            <button class="cta" id="purchase" data-label="Complete purchase">
+              Complete purchase
+            </button>
+
+            <div class="secondary">
+              <button class="button" id="save" data-label="Save for later">
+                Save for later
+              </button>
+              <p class="saved" id="saved" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <footer class="paybar">
+            <p>Secured by nobody. This page charges nothing.</p>
+            <button class="linkish" id="support" data-label="Contact support">
+              Contact support
+            </button>
+          </footer>
+        </section>
+
+        <div class="pane">
+          <aside class="inspector">
+            <header class="inspector__head">
+              <h3>What the library sees</h3>
+              <span class="tally" id="tally" data-io-ignore>idle</span>
+            </header>
+
+            <ul class="gauges" data-io-ignore>
+              <li class="gauge" data-signal="rage">
+                <svg class="gauge__icon" aria-hidden="true">
+                  <use href="#icon-rage" />
+                </svg>
+                <p class="gauge__name">Rage click</p>
+                <div
+                  class="gauge__dots"
+                  id="rage-dots"
+                  aria-hidden="true"
+                ></div>
+                <p class="gauge__readout" id="rage-readout">
+                  click one thing 3 times, fast
+                </p>
+              </li>
+
+              <li class="gauge" data-signal="hesitate">
+                <svg class="gauge__icon" aria-hidden="true">
+                  <use href="#icon-hesitate" />
+                </svg>
+                <p class="gauge__name">Hesitation</p>
+                <div class="gauge__track" aria-hidden="true">
+                  <div class="gauge__fill" id="hesitate-fill"></div>
+                </div>
+                <p class="gauge__readout" id="hesitate-readout">
+                  hover anything for 2 seconds
+                </p>
+              </li>
+
+              <li class="gauge" data-signal="dead">
+                <svg class="gauge__icon" aria-hidden="true">
+                  <use href="#icon-dead" />
+                </svg>
+                <p class="gauge__name">Dead click</p>
+                <div class="gauge__track" aria-hidden="true">
+                  <div class="gauge__fill" id="dead-fill"></div>
+                </div>
+                <p class="gauge__readout" id="dead-readout">
+                  press Apply, it is broken
+                </p>
+              </li>
+            </ul>
+
+            <section class="inspector__block">
+              <h4>Signals</h4>
+              <ol
+                class="feed"
+                id="feed"
+                role="log"
+                aria-live="polite"
+                data-io-ignore
+              >
+                <li class="feed__empty" id="feed-empty">
+                  Nothing yet. Each gauge above says what sets it off.
+                </li>
+              </ol>
+            </section>
+          </aside>
+        </div>
+      </div>
+
+      <section class="usage">
+        <div class="usage__code">
+          <h3>The code running this page</h3>
+          <pre class="code" id="code"></pre>
+        </div>
+
+        <aside class="limits">
+          <h3>Worth knowing</h3>
+          <ul>
+            <li>
+              <strong
+                >A page that changes constantly hides its dead clicks.</strong
+              >
+              Anything ticking away counts as the page reacting, which is what
+              <code>ignore</code> is for. This demo needs it for its own
+              inspector, and a real page needs it for its clock.
+            </li>
+            <li>
+              <strong>Hesitation needs a pointer</strong>, so it does not fire
+              on touch screens.
+            </li>
+            <li>
+              <strong>A click that acts outside the DOM looks dead.</strong>
+              Copying to the clipboard changes nothing the browser can see.
+            </li>
+          </ul>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        MIT licensed, built by
+        <a href="https://github.com/B1CA16">Francisco Ferreira</a>. Hesitation
+        needs a pointer, so it does not fire on touch screens. That limit and
+        several others are written down in
+        <a
+          href="https://github.com/B1CA16/interaction-observer/blob/main/docs/design.md"
+          >the design notes</a
+        >.
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
