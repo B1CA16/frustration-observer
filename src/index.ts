@@ -1,6 +1,7 @@
 // Public entry point of the package.
 
 import type { Detector } from "./detector.js";
+import { createHesitationDetector } from "./detectors/hesitation.js";
 import { createRageClickDetector } from "./detectors/rage-click.js";
 import { createObserver } from "./observer.js";
 import { resolveOptions } from "./options.js";
@@ -36,6 +37,9 @@ export function createInteractionObserver(
     const detectors: Detector[] = [];
     if (resolved.rageClick) {
       detectors.push(createRageClickDetector(resolved.rageClick, emit));
+    }
+    if (resolved.hesitation) {
+      detectors.push(createHesitationDetector(resolved.hesitation, emit));
     }
     return detectors;
   });
