@@ -10,6 +10,13 @@ export interface InteractionEventBase {
   type: InteractionType;
   /** The observed element the interaction happened on. */
   target: Element;
+  /**
+   * A CSS selector for the target, such as `#buy` or
+   * `#checkout > div > button:nth-of-type(2)`, ready to log or send somewhere.
+   * Ids are used where present, otherwise the element is described by its
+   * position. Classes are left out, since a utility class stack is noise.
+   */
+  selector: string;
   /** When the interaction was detected, as a `Date.now()` timestamp. */
   timestamp: number;
 }
@@ -58,6 +65,15 @@ export interface InteractionEventMap {
 
 /** Any event this library emits. */
 export type InteractionEvent = InteractionEventMap[InteractionType];
+
+/** Distributes over the union, so each member keeps its own `type`. */
+type WithoutSelector<T> = T extends unknown ? Omit<T, "selector"> : never;
+
+/**
+ * What a detector reports. Detectors describe timing, never the DOM tree, so
+ * the observer is what turns the target into a selector.
+ */
+export type DetectedInteraction = WithoutSelector<InteractionEvent>;
 
 /** Receives events of a single interaction type. */
 export type InteractionListener<T extends InteractionType> = (

@@ -4,6 +4,7 @@
 
 import type { Detector } from "./detector.js";
 import { createEmitter, type Emit } from "./emitter.js";
+import { selectorFor } from "./selector.js";
 import type { InteractionObserver, ObserveTarget } from "./types.js";
 
 const PREFIX = "[frustration-observer]";
@@ -70,7 +71,12 @@ export function createObserver(
   createDetectors: (emit: Emit) => Detector[],
 ): InteractionObserver {
   const emitter = createEmitter();
-  const detectors = createDetectors(emitter.emit);
+
+  // Detectors report what happened; describing the element is the observer's
+  // job, because it is the only part that reads the DOM tree.
+  const detectors = createDetectors((detected) =>
+    emitter.emit({ ...detected, selector: selectorFor(detected.target) }),
+  );
   const targets = new Set<Element>();
 
   let attached = false;

@@ -3,6 +3,7 @@
 
 import type {
   AnyInteractionListener,
+  DetectedInteraction,
   InteractionEvent,
   InteractionListener,
   InteractionType,
@@ -28,7 +29,7 @@ export interface Emitter {
 }
 
 /** How a detector reports a detected interaction. */
-export type Emit = (event: InteractionEvent) => void;
+export type Emit = (event: DetectedInteraction) => void;
 
 export function createEmitter(): Emitter {
   // A Set per key, so registering the same listener twice registers it once,
