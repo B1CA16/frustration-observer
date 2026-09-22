@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project uses
 [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.2.0
+
+### Added
+
+- Every event now carries `selector`, a CSS selector for its target such as
+  `#buy` or `#checkout > div > button:nth-of-type(2)`. Reporting an interaction
+  no longer starts by writing code to name the element. Ids are used where
+  present, otherwise the element is described by its position; classes are left
+  out, since a utility class stack makes a selector unreadable.
+
+An addition. Everything written against 1.1.0 keeps working.
+
 ## 1.1.0
 
 ### Added

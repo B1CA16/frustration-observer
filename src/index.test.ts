@@ -59,6 +59,28 @@ describe("createInteractionObserver", () => {
     vi.useRealTimers();
   });
 
+  it("describes the target of every event it emits", async () => {
+    vi.useFakeTimers();
+    const observer = createInteractionObserver({ hesitation: false });
+    const selectors: string[] = [];
+    observer.on("*", (event) => selectors.push(event.selector));
+
+    document.body.innerHTML = `<main id="checkout"><div><button>Buy</button></div></main>`;
+    const button = document.querySelector("button")!;
+    observer.observe(button);
+
+    for (let i = 0; i < 3; i += 1) {
+      button.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, clientX: 5, clientY: 5 }),
+      );
+      await vi.advanceTimersByTimeAsync(20);
+    }
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(selectors).toContain("#checkout > div > button");
+    vi.useRealTimers();
+  });
+
   it("observes and disconnects without throwing", () => {
     const observer = createInteractionObserver();
     const button = document.createElement("button");

@@ -124,7 +124,8 @@ function record(event: InteractionEvent): void {
   const target = document.createElement("span");
   target.className = "event__target";
   target.textContent =
-    event.target.getAttribute("data-label") ?? event.target.tagName;
+    event.target.getAttribute("data-label") ?? event.selector;
+  target.title = event.selector;
   detail.append(target, `, ${facts(event)}`);
 
   item.append(icon(event.type, "event__icon"), title, detail);
@@ -355,7 +356,7 @@ need("code").innerHTML = `<b>import</b> {
 });
 
 observer.on("*", (event) =&gt; {
-  console.log(event.type, event.target);
+  console.log(event.type, event.selector);
 });
 
 observer.observe("button, .plan");`;

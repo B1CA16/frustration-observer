@@ -6,6 +6,7 @@ import type { HesitationEvent, RageClickEvent } from "./types.js";
 const rageClick = (): RageClickEvent => ({
   type: "rageclick",
   target: document.createElement("button"),
+  selector: "#buy",
   timestamp: 1000,
   clicks: 3,
   duration: 420,
@@ -16,6 +17,7 @@ const rageClick = (): RageClickEvent => ({
 const hesitation = (): HesitationEvent => ({
   type: "hesitation",
   target: document.createElement("button"),
+  selector: "#plan",
   timestamp: 1000,
   duration: 2000,
 });

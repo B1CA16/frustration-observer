@@ -87,7 +87,7 @@ somewhere usually wants, subscribe to `"*"`:
 
 ```ts
 observer.on("*", (event) => {
-  analytics.track(event.type, { target: event.target.id, ...event });
+  analytics.track(event.type, { element: event.selector });
 });
 ```
 
@@ -119,12 +119,14 @@ cannot work.
 
 ## Events
 
-Every event carries `type`, `target` (the observed element) and `timestamp`.
+Every event carries `type`, `target` (the observed element), `selector` (a CSS
+selector for that element, ready to log or send somewhere) and `timestamp`.
 
 ```ts
 interface RageClickEvent {
   type: "rageclick";
   target: Element;
+  selector: string; // "#buy", or "#checkout > div > button:nth-of-type(2)"
   timestamp: number;
   clicks: number; // total clicks in the burst
   duration: number; // milliseconds from first to last
@@ -135,6 +137,7 @@ interface RageClickEvent {
 interface HesitationEvent {
   type: "hesitation";
   target: Element;
+  selector: string;
   timestamp: number;
   duration: number; // milliseconds the pointer had rested
 }
@@ -142,6 +145,7 @@ interface HesitationEvent {
 interface DeadClickEvent {
   type: "deadclick";
   target: Element;
+  selector: string;
   timestamp: number;
   timeout: number; // milliseconds waited before giving up
   position: { x: number; y: number };
