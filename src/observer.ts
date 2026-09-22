@@ -4,7 +4,7 @@
 
 import type { Detector } from "./detector.js";
 import { createEmitter, type Emit } from "./emitter.js";
-import type { InteractionObserver } from "./types.js";
+import type { InteractionObserver, ObserveTarget } from "./types.js";
 
 const PREFIX = "[frustration-observer]";
 
@@ -14,6 +14,52 @@ const CAPTURE = true;
 
 function describe(value: unknown): string {
   return value === null ? "null" : typeof value;
+}
+
+function isIterable(value: unknown): value is Iterable<unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Iterable<unknown>)[Symbol.iterator] === "function"
+  );
+}
+
+/**
+ * Accepts one element, a CSS selector, or any list of elements, and returns
+ * the elements to act on. A selector that matches nothing is not a mistake,
+ * so it yields an empty list rather than throwing.
+ *
+ * Strings are checked before iterables on purpose: a string is iterable, and
+ * would otherwise be read as a list of single characters.
+ */
+function toElements(target: unknown, method: string): Element[] {
+  if (typeof target === "string") {
+    try {
+      return [...document.querySelectorAll(target)];
+    } catch {
+      throw new TypeError(
+        `${PREFIX} ${method}() was given an invalid CSS selector: ${target}`,
+      );
+    }
+  }
+
+  if (target instanceof Element) return [target];
+
+  if (isIterable(target)) {
+    const elements = [...target];
+    for (const element of elements) {
+      if (!(element instanceof Element)) {
+        throw new TypeError(
+          `${PREFIX} ${method}() was given a list holding ${describe(element)}, which is not an Element`,
+        );
+      }
+    }
+    return elements as Element[];
+  }
+
+  throw new TypeError(
+    `${PREFIX} ${method}() expects an Element, a CSS selector or a list of Elements, received ${describe(target)}`,
+  );
 }
 
 /**
@@ -87,30 +133,22 @@ export function createObserver(
     attached = false;
   }
 
-  function assertElement(
-    value: unknown,
-    method: string,
-  ): asserts value is Element {
-    if (!(value instanceof Element)) {
-      throw new TypeError(
-        `${PREFIX} ${method}() expects an Element, received ${describe(value)}`,
-      );
-    }
-  }
-
   return {
-    observe(target) {
-      assertElement(target, "observe");
-      if (targets.has(target)) return;
-      targets.add(target);
-      attach();
+    observe(target: ObserveTarget) {
+      const elements = toElements(target, "observe");
+      for (const element of elements) {
+        if (targets.has(element)) continue;
+        targets.add(element);
+      }
+      if (targets.size > 0) attach();
     },
 
-    unobserve(target) {
-      assertElement(target, "unobserve");
-      if (!targets.delete(target)) return;
-      for (const detector of detectors) {
-        detector.onUnobserve?.(target);
+    unobserve(target: ObserveTarget) {
+      for (const element of toElements(target, "unobserve")) {
+        if (!targets.delete(element)) continue;
+        for (const detector of detectors) {
+          detector.onUnobserve?.(element);
+        }
       }
       if (targets.size === 0) detach();
     },
@@ -125,12 +163,10 @@ export function createObserver(
       // reconnected simply by observing another element.
     },
 
-    on(type, listener) {
-      return emitter.on(type, listener);
-    },
-
-    off(type, listener) {
-      emitter.off(type, listener);
-    },
+    // Passed through rather than wrapped: the emitter already carries exactly
+    // these overloads, and re-declaring them here would only be a place for
+    // the two to drift apart.
+    on: emitter.on,
+    off: emitter.off,
   };
 }

@@ -5,7 +5,7 @@
 [![minzipped size](https://img.shields.io/bundlejs/size/frustration-observer)](https://bundlejs.com/?q=frustration-observer)
 [![license](https://img.shields.io/npm/l/frustration-observer?cacheSeconds=3600)](LICENSE)
 
-Detect rage clicks, hesitation and dead clicks on any DOM element. 2.4 KB
+Detect rage clicks, hesitation and dead clicks on any DOM element. 2.5 KB
 minified and gzipped, no dependencies, no framework.
 
 **[Try the live demo](https://b1ca16.github.io/frustration-observer/)**
@@ -69,9 +69,26 @@ observer.on("rageclick", (event) => report(event));
 observer.on("hesitation", (event) => report(event));
 observer.on("deadclick", (event) => report(event));
 
-for (const element of document.querySelectorAll("button")) {
-  observer.observe(element);
-}
+observer.observe("button, [role=button]");
+```
+
+`observe()` takes a single element, a CSS selector, or any list of elements,
+whichever suits the page. A selector matching nothing is not an error.
+
+```ts
+observer.observe(button);
+observer.observe(".cta");
+observer.observe(document.querySelectorAll("button"));
+observer.observe([header, footer]);
+```
+
+To handle every interaction in one place, which is what reporting them
+somewhere usually wants, subscribe to `"*"`:
+
+```ts
+observer.on("*", (event) => {
+  analytics.track(event.type, { target: event.target.id, ...event });
+});
 ```
 
 Every detector is enabled with sensible defaults, so

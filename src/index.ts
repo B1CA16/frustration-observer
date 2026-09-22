@@ -50,6 +50,7 @@ export function createInteractionObserver(
 }
 
 export type {
+  AnyInteractionListener,
   DeadClickEvent,
   DeadClickOptions,
   HesitationEvent,
@@ -60,6 +61,7 @@ export type {
   InteractionObserver,
   InteractionObserverOptions,
   InteractionType,
+  ObserveTarget,
   Point,
   RageClickEvent,
   RageClickOptions,

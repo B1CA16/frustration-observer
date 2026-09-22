@@ -208,12 +208,116 @@ describe("observer lifecycle", () => {
     expect(listener).toHaveBeenCalledOnce();
   });
 
-  it("rejects anything that is not an element", () => {
+  it("rejects anything that is not an element, selector or list", () => {
     const { observer } = setup();
-    const notAnElement = "#button" as unknown as Element;
+    const nonsense = 42 as unknown as Element;
 
-    expect(() => observer.observe(notAnElement)).toThrow(TypeError);
-    expect(() => observer.unobserve(notAnElement)).toThrow(TypeError);
+    expect(() => observer.observe(nonsense)).toThrow(TypeError);
+    expect(() => observer.unobserve(nonsense)).toThrow(TypeError);
+  });
+});
+
+describe("observing many elements at once", () => {
+  it("observes every element matching a selector", () => {
+    const { observer, detector } = setup();
+    appendElement("button");
+    appendElement("button");
+
+    observer.observe("button");
+    for (const button of document.querySelectorAll("button")) click(button);
+
+    expect(detector.onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it("observes every element of a NodeList", () => {
+    const { observer, detector } = setup();
+    appendElement("button");
+    appendElement("button");
+
+    observer.observe(document.querySelectorAll("button"));
+    for (const button of document.querySelectorAll("button")) click(button);
+
+    expect(detector.onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it("observes every element of an array", () => {
+    const { observer, detector } = setup();
+    const first = appendElement();
+    const second = appendElement();
+
+    observer.observe([first, second]);
+    click(first);
+    click(second);
+
+    expect(detector.onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it("unobserves every element matching a selector", () => {
+    const { observer, detector } = setup();
+    const button = appendElement("button");
+
+    observer.observe("button");
+    observer.unobserve("button");
+    click(button);
+
+    expect(detector.onClick).not.toHaveBeenCalled();
+  });
+
+  it("does nothing when a selector matches nothing", () => {
+    const addEventListener = vi.spyOn(document, "addEventListener");
+    const { observer } = setup();
+
+    expect(() => observer.observe(".nothing-here")).not.toThrow();
+    expect(addEventListener).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid selector", () => {
+    const { observer } = setup();
+
+    expect(() => observer.observe("((")).toThrow(TypeError);
+  });
+
+  it("rejects a list holding something that is not an element", () => {
+    const { observer } = setup();
+    const list = [appendElement(), "not an element"] as unknown as Element[];
+
+    expect(() => observer.observe(list)).toThrow(TypeError);
+  });
+});
+
+describe("wildcard listeners", () => {
+  it("delivers every interaction type to a wildcard listener", () => {
+    const { observer, emit } = setup();
+    const listener = vi.fn();
+    const element = appendElement();
+
+    observer.on("*", listener);
+    emit({ type: "hesitation", target: element, timestamp: 0, duration: 2000 });
+    emit({
+      type: "deadclick",
+      target: element,
+      timestamp: 0,
+      timeout: 1000,
+      position: { x: 0, y: 0 },
+    });
+
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it("stops a wildcard listener through the returned unsubscribe", () => {
+    const { observer, emit } = setup();
+    const listener = vi.fn();
+
+    const off = observer.on("*", listener);
+    off();
+    emit({
+      type: "hesitation",
+      target: appendElement(),
+      timestamp: 0,
+      duration: 2000,
+    });
+
+    expect(listener).not.toHaveBeenCalled();
   });
 });
 

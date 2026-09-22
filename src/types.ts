@@ -64,6 +64,9 @@ export type InteractionListener<T extends InteractionType> = (
   event: InteractionEventMap[T],
 ) => void;
 
+/** Receives every interaction, whatever its type. */
+export type AnyInteractionListener = (event: InteractionEvent) => void;
+
 /** Removes the listener it was returned for. Safe to call more than once. */
 export type Unsubscribe = () => void;
 
@@ -120,22 +123,36 @@ export interface InteractionObserverOptions {
   deadClick?: DeadClickOptions | false;
 }
 
+/**
+ * What {@link InteractionObserver.observe} accepts: one element, a CSS
+ * selector, or any list of elements such as a NodeList or an array.
+ */
+export type ObserveTarget = Element | string | Iterable<Element>;
+
 /** Watches elements for signs of user frustration. */
 export interface InteractionObserver {
   /**
-   * Starts watching an element. The first call attaches the library's event
-   * listeners to the document. Observing the same element twice does nothing.
+   * Starts watching one or more elements. The first call attaches the
+   * library's event listeners to the document. Observing the same element
+   * twice does nothing, and a selector matching nothing is not an error.
    *
-   * @throws TypeError if `target` is not an Element.
+   * @throws TypeError if `target` is not an Element, a valid CSS selector or a
+   * list of Elements.
+   *
+   * @example
+   * observer.observe(button);
+   * observer.observe("button, [role=button]");
+   * observer.observe(document.querySelectorAll(".cta"));
    */
-  observe(target: Element): void;
+  observe(target: ObserveTarget): void;
   /**
-   * Stops watching an element and forgets anything in progress on it. The
-   * document listeners are removed once no elements remain.
+   * Stops watching one or more elements and forgets anything in progress on
+   * them. The document listeners are removed once no elements remain.
    *
-   * @throws TypeError if `target` is not an Element.
+   * @throws TypeError if `target` is not an Element, a valid CSS selector or a
+   * list of Elements.
    */
-  unobserve(target: Element): void;
+  unobserve(target: ObserveTarget): void;
   /**
    * Stops watching every element, removes the document listeners and cancels
    * pending detection. Event listeners registered with {@link on} are kept, so
@@ -151,9 +168,21 @@ export interface InteractionObserver {
     type: T,
     listener: InteractionListener<T>,
   ): Unsubscribe;
+  /**
+   * Registers a listener for every interaction type, which is what reporting
+   * all of them to one place usually wants.
+   *
+   * @returns A function that removes the listener.
+   *
+   * @example
+   * observer.on("*", (event) => send(event.type, event));
+   */
+  on(type: "*", listener: AnyInteractionListener): Unsubscribe;
   /** Removes a listener registered with {@link on}. */
   off<T extends InteractionType>(
     type: T,
     listener: InteractionListener<T>,
   ): void;
+  /** Removes a wildcard listener registered with {@link on}. */
+  off(type: "*", listener: AnyInteractionListener): void;
 }

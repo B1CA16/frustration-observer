@@ -97,6 +97,13 @@ observer.disconnect();
 The entire surface is `createInteractionObserver`, `on`, `off`, `observe`,
 `unobserve`, `disconnect`. `on()` returns an unsubscribe function.
 
+Two additions in 1.1 widened that surface without changing its shape.
+`observe()` and `unobserve()` accept a CSS selector or a list of elements as
+well as a single element, and `on("*")` subscribes to every type at once.
+Neither adds a concept: the first is a loop the caller was writing anyway, and
+the second is the shape of the most common use, which is reporting every
+interaction to the same place.
+
 All options are optional and merge with defaults, so `{ rageClick: { clicks: 5 } }`
 keeps the default interval and radius. Any detector can be disabled with
 `false`, for example `{ deadClick: false }`.
@@ -185,7 +192,9 @@ answer anyway.
 
 - `createInteractionObserver` throws `RangeError` for non-finite or
   non-positive thresholds, and `TypeError` for malformed option objects.
-- `observe()` and `unobserve()` throw `TypeError` when given a non-Element.
+- `observe()` and `unobserve()` throw `TypeError` when given anything that is
+  not an Element, a valid CSS selector, or a list of Elements. A selector that
+  matches nothing is not an error.
 - Listener errors are isolated: a handler that throws is reported to the console
   and does not prevent the remaining handlers from running.
 

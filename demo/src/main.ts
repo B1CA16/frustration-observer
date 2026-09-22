@@ -147,8 +147,11 @@ function setState(gauge: HTMLElement, state: "live" | "hit" | null): void {
 
 const observer = createInteractionObserver(CONFIG);
 
+// Every interaction goes to the feed, whatever its type. The handlers below
+// add only what each gauge needs on top of that.
+observer.on("*", record);
+
 observer.on("rageclick", (event) => {
-  record(event);
   setState(rageGauge, "hit");
   rageReadout.textContent = `${event.clicks} clicks reported`;
   window.setTimeout(() => {
@@ -158,13 +161,11 @@ observer.on("rageclick", (event) => {
 });
 
 observer.on("hesitation", (event) => {
-  record(event);
   setState(hesitateGauge, "hit");
   hesitateReadout.textContent = `${(event.duration / 1000).toFixed(1)}s reported`;
 });
 
-observer.on("deadclick", (event) => {
-  record(event);
+observer.on("deadclick", () => {
   watching = null;
   deadFill.style.width = "100%";
   setState(deadGauge, "hit");
@@ -179,7 +180,7 @@ function restoreDeadGauge(): void {
   deadReadout.textContent = IDLE.dead;
 }
 
-for (const target of observed) observer.observe(target);
+observer.observe(observed);
 
 // ----------------------------------------------------------------- gauges
 
@@ -353,8 +354,8 @@ need("code").innerHTML = `<b>import</b> {
   },
 });
 
-observer.on("rageclick", (event) =&gt; {
-  console.log(event.clicks, event.duration);
+observer.on("*", (event) =&gt; {
+  console.log(event.type, event.target);
 });
 
-observer.observe(purchaseButton);`;
+observer.observe("button, .plan");`;

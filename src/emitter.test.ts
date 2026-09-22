@@ -121,6 +121,69 @@ describe("createEmitter", () => {
     expect(listener).toHaveBeenCalledOnce();
   });
 
+  it("calls a wildcard listener for every type", () => {
+    const emitter = createEmitter();
+    const listener = vi.fn();
+
+    emitter.on("*", listener);
+    emitter.emit(rageClick());
+    emitter.emit(hesitation());
+
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it("calls both the wildcard and the type listener", () => {
+    const emitter = createEmitter();
+    const wildcard = vi.fn();
+    const specific = vi.fn();
+
+    emitter.on("*", wildcard);
+    emitter.on("rageclick", specific);
+    emitter.emit(rageClick());
+
+    expect(wildcard).toHaveBeenCalledOnce();
+    expect(specific).toHaveBeenCalledOnce();
+  });
+
+  it("stops calling a wildcard listener once it unsubscribes", () => {
+    const emitter = createEmitter();
+    const listener = vi.fn();
+
+    const unsubscribe = emitter.on("*", listener);
+    unsubscribe();
+    emitter.emit(rageClick());
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it("removes a wildcard listener through off", () => {
+    const emitter = createEmitter();
+    const listener = vi.fn();
+
+    emitter.on("*", listener);
+    emitter.off("*", listener);
+    emitter.emit(rageClick());
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it("keeps calling the other listeners when a wildcard listener throws", () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const emitter = createEmitter();
+    const listener = vi.fn();
+
+    emitter.on("*", () => {
+      throw new Error("listener exploded");
+    });
+    emitter.on("rageclick", listener);
+    emitter.emit(rageClick());
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(consoleError).toHaveBeenCalledOnce();
+  });
+
   it("removes every listener on clear", () => {
     const emitter = createEmitter();
     const listener = vi.fn();
