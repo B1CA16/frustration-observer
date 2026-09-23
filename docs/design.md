@@ -1,7 +1,8 @@
 # frustration-observer V1 design
 
-A small, framework-agnostic browser library that detects three meaningful user
-interactions with DOM elements: rage clicks, hesitation, and dead clicks.
+A small, framework-agnostic browser library that detects meaningful user
+interactions with DOM elements: rage clicks, hesitation, dead clicks and, since
+1.3, mouse thrashing.
 
 This document records the design decisions made before implementation, the
 precise contract of each detector, and, just as importantly, what V1
@@ -36,10 +37,12 @@ src/
   emitter.ts        typed event emitter; on() returns an unsubscribe function
   options.ts        defaults, merging and validation
   activity.ts       page-activity watcher (mutation / navigation / scroll)
+  selector.ts       describes an element as a CSS selector for the event
   detectors/
     rage-click.ts
     hesitation.ts
     dead-click.ts
+    thrash.ts
 ```
 
 When a DOM event fires, `observer.ts` walks up from `event.target` until it
@@ -51,6 +54,7 @@ interface Detector {
   onClick?(target: Element, ev: MouseEvent): void;
   onEnter?(target: Element, ev: MouseEvent): void;
   onLeave?(target: Element): void;
+  onMove?(target: Element, ev: MouseEvent): void; // opts into pointermove
   onUnobserve?(target: Element): void; // drop per-element state
   reset(): void; // drop pending state and timers; reusable afterwards
 }
@@ -115,13 +119,16 @@ keeps the default interval and radius. Any detector can be disabled with
 | `rageClick`  | `clicks: 3`, `interval: 1000`, `radius: 30` |
 | `hesitation` | `threshold: 2000`                           |
 | `deadClick`  | `timeout: 1000`, `ignore: undefined`        |
+| `thrash`     | `reversals: 6`, `interval: 1000`            |
 
 ### Event payloads
 
 ```ts
-type InteractionEvent = RageClickEvent | HesitationEvent | DeadClickEvent;
+type InteractionEvent =
+  RageClickEvent | HesitationEvent | DeadClickEvent | ThrashEvent;
 
-// every event carries: type, target: Element, timestamp: number
+// every event carries: type, target: Element, selector: string,
+// timestamp: number
 
 interface RageClickEvent {
   clicks: number;
@@ -138,7 +145,17 @@ interface DeadClickEvent {
   timeout: number;
   position: { x: number; y: number };
 }
+
+interface ThrashEvent {
+  reversals: number;
+  duration: number;
+  distance: number;
+}
 ```
+
+The `selector` field was added in 1.2. It is built by the observer rather than
+the detectors, because describing an element means reading the DOM tree, which
+detectors deliberately never do.
 
 ## Detector contracts
 
@@ -187,6 +204,39 @@ and catches SPA navigations that emit no event at all without having to patch
 `history.pushState`. The trade is that a change which reverts within the
 timeout, such as scrolling away and back, is not counted, which is arguably the right
 answer anyway.
+
+### thrash
+
+Added in 1.3. While the pointer is inside an observed element, movements of at
+least eight pixels are recorded, and a movement that turns more than ninety
+degrees from the one before it counts as a reversal. Once `reversals` of them
+fall inside `interval`, the shaking is reported once; the element re-arms when
+the pointer leaves, or after a spell of `interval` with no qualifying movement.
+
+Eight pixels is not configurable on purpose: it describes a human hand resting
+on a mouse, not a preference.
+
+This is the only detector that reacts to `pointermove`, which fires far more
+often than anything else here. The observer therefore attaches that listener
+only when some detector implements `onMove`, so a page running with
+`thrash: false` pays nothing.
+
+The defaults were chosen from evidence rather than taste. Replaying ordinary
+movement through the detector gives the peak reversals inside one second:
+
+| movement                                      | reversals |
+| --------------------------------------------- | --------- |
+| straight run across an element                | 0         |
+| sweeping arc towards a target                 | 0         |
+| hand resting on the mouse                     | 0         |
+| moving through a form, field to field         | 0         |
+| scanning a list up and down                   | 2         |
+| hunting a small target, overshoot and correct | 2         |
+| deliberate shaking                            | 8         |
+
+Six sits in the gap between the noisiest ordinary movement and deliberate
+shaking. Each of those paths is replayed in the test file as a case that must
+stay silent, so the margin cannot quietly erode.
 
 ## Error handling
 

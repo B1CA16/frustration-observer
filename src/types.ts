@@ -2,7 +2,8 @@
 // createInteractionObserver, the events it emits, and the observer it returns.
 
 /** The interactions this library can detect. */
-export type InteractionType = "rageclick" | "hesitation" | "deadclick";
+export type InteractionType =
+  "rageclick" | "hesitation" | "deadclick" | "thrash";
 
 /** Fields carried by every interaction event. */
 export interface InteractionEventBase {
@@ -56,11 +57,23 @@ export interface DeadClickEvent extends InteractionEventBase {
   position: Point;
 }
 
+/** The pointer shaken back and forth over an element. */
+export interface ThrashEvent extends InteractionEventBase {
+  type: "thrash";
+  /** Direction changes counted in the window. */
+  reversals: number;
+  /** Milliseconds the shaking lasted. */
+  duration: number;
+  /** Pixels travelled while shaking. */
+  distance: number;
+}
+
 /** Maps each interaction type to the event its listeners receive. */
 export interface InteractionEventMap {
   rageclick: RageClickEvent;
   hesitation: HesitationEvent;
   deadclick: DeadClickEvent;
+  thrash: ThrashEvent;
 }
 
 /** Any event this library emits. */
@@ -129,6 +142,21 @@ export interface DeadClickOptions {
   ignore?: string;
 }
 
+/** Tuning for thrash detection. */
+export interface ThrashOptions {
+  /**
+   * Direction changes required before the movement counts as thrashing.
+   * Whole number, minimum 2.
+   * @defaultValue 6
+   */
+  reversals?: number;
+  /**
+   * Milliseconds the direction changes must fall inside.
+   * @defaultValue 1000
+   */
+  interval?: number;
+}
+
 /**
  * Options accepted by {@link createInteractionObserver}. Every detector is
  * enabled with sensible defaults; pass `false` to turn one off.
@@ -137,6 +165,7 @@ export interface InteractionObserverOptions {
   rageClick?: RageClickOptions | false;
   hesitation?: HesitationOptions | false;
   deadClick?: DeadClickOptions | false;
+  thrash?: ThrashOptions | false;
 }
 
 /**

@@ -111,6 +111,15 @@ export function createObserver(
     }
   }
 
+  function handlePointerMove(event: Event) {
+    const pointerEvent = event as MouseEvent;
+    const target = resolveTarget(pointerEvent.target);
+    if (!target) return;
+    for (const detector of detectors) {
+      detector.onMove?.(target, pointerEvent);
+    }
+  }
+
   function handlePointerOut(event: Event) {
     const pointerEvent = event as MouseEvent;
     const target = resolveTarget(pointerEvent.target);
@@ -121,6 +130,10 @@ export function createObserver(
     }
   }
 
+  // pointermove fires far more often than anything else here, so it is only
+  // listened for when a detector actually asked for it.
+  const watchesMovement = detectors.some((detector) => detector.onMove);
+
   // Nothing is attached until the first element is observed, which keeps
   // importing this module safe outside a browser.
   function attach() {
@@ -128,6 +141,9 @@ export function createObserver(
     document.addEventListener("click", handleClick, CAPTURE);
     document.addEventListener("pointerover", handlePointerOver, CAPTURE);
     document.addEventListener("pointerout", handlePointerOut, CAPTURE);
+    if (watchesMovement) {
+      document.addEventListener("pointermove", handlePointerMove, CAPTURE);
+    }
     attached = true;
   }
 
@@ -136,6 +152,9 @@ export function createObserver(
     document.removeEventListener("click", handleClick, CAPTURE);
     document.removeEventListener("pointerover", handlePointerOver, CAPTURE);
     document.removeEventListener("pointerout", handlePointerOut, CAPTURE);
+    if (watchesMovement) {
+      document.removeEventListener("pointermove", handlePointerMove, CAPTURE);
+    }
     attached = false;
   }
 

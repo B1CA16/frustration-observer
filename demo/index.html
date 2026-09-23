@@ -52,6 +52,16 @@
           stroke-linejoin="round"
         />
       </symbol>
+      <symbol id="icon-thrash" viewBox="0 0 20 20">
+        <path
+          d="M2.5 13 L6.5 6 L10 14 L13.5 6 L17.5 13"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </symbol>
       <symbol id="icon-dead" viewBox="0 0 20 20">
         <circle
           cx="10"
@@ -112,6 +122,14 @@
             </svg>
             <h2>Hesitation</h2>
             <p>The pointer resting on something for two seconds.</p>
+          </li>
+
+          <li class="detector" data-signal="thrash">
+            <svg class="detector__icon" aria-hidden="true">
+              <use href="#icon-thrash" />
+            </svg>
+            <h2>Thrashing</h2>
+            <p>The pointer shaken back and forth over one spot.</p>
           </li>
 
           <li class="detector" data-signal="dead">
@@ -246,6 +264,19 @@
                 </div>
                 <p class="gauge__readout" id="hesitate-readout">
                   hover anything for 2 seconds
+                </p>
+              </li>
+
+              <li class="gauge" data-signal="thrash">
+                <svg class="gauge__icon" aria-hidden="true">
+                  <use href="#icon-thrash" />
+                </svg>
+                <p class="gauge__name">Thrashing</p>
+                <div class="gauge__track" aria-hidden="true">
+                  <div class="gauge__fill" id="thrash-fill"></div>
+                </div>
+                <p class="gauge__readout" id="thrash-readout">
+                  shake the mouse over something
                 </p>
               </li>
 

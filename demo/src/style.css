@@ -22,6 +22,7 @@
   --rage: #ff6f4d;
   --hesitate: #ffc857;
   --dead: #a9b4ff;
+  --thrash: #5fd3bc;
 
   --sans: "Archivo", "Segoe UI", system-ui, sans-serif;
   --mono: "IBM Plex Mono", "Consolas", ui-monospace, monospace;
@@ -180,6 +181,10 @@ a {
 
 .detector[data-signal="dead"] {
   --signal: var(--dead);
+}
+
+.detector[data-signal="thrash"] {
+  --signal: var(--thrash);
 }
 
 .detector__icon {
@@ -535,6 +540,10 @@ a {
   --signal: var(--dead);
 }
 
+.gauge[data-signal="thrash"] {
+  --signal: var(--thrash);
+}
+
 .gauge__icon {
   width: 17px;
   height: 17px;
@@ -649,6 +658,10 @@ a {
 
 .event[data-signal="dead"] {
   --signal: var(--dead);
+}
+
+.event[data-signal="thrash"] {
+  --signal: var(--thrash);
 }
 
 .event__icon {

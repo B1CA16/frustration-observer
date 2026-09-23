@@ -12,6 +12,7 @@ describe("resolveOptions", () => {
       rageClick: { clicks: 3, interval: 1000, radius: 30 },
       hesitation: { threshold: 2000 },
       deadClick: { timeout: 1000, ignore: undefined },
+      thrash: { reversals: 6, interval: 1000 },
     });
   });
 

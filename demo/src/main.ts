@@ -24,18 +24,21 @@ const CONFIG = {
   // The inspector redraws itself constantly, and every change looks like the
   // page reacting to a click. Without this, no dead click could ever survive.
   deadClick: { timeout: 1000, ignore: "[data-io-ignore]" },
+  thrash: { reversals: 6, interval: 1000 },
 } satisfies InteractionObserverOptions;
 
 const SIGNAL: Record<InteractionType, string> = {
   rageclick: "rage",
   hesitation: "hesitate",
   deadclick: "dead",
+  thrash: "thrash",
 };
 
 const TITLE: Record<InteractionType, string> = {
   rageclick: "Rage click",
   hesitation: "Hesitation",
   deadclick: "Dead click",
+  thrash: "Thrashing",
 };
 
 // Idle gauges double as the instructions: a visitor who has not touched
@@ -44,6 +47,7 @@ const IDLE = {
   rage: "click one thing 3 times, fast",
   hesitate: "hover anything for 2 seconds",
   dead: "press Apply, it is broken",
+  thrash: "shake the mouse over something",
 };
 
 function need<T extends HTMLElement>(id: string): T {
@@ -62,10 +66,13 @@ const hesitateFill = need("hesitate-fill");
 const hesitateReadout = need("hesitate-readout");
 const deadFill = need("dead-fill");
 const deadReadout = need("dead-readout");
+const thrashFill = need("thrash-fill");
+const thrashReadout = need("thrash-readout");
 
 const rageGauge = rageReadout.closest(".gauge") as HTMLElement;
 const hesitateGauge = hesitateReadout.closest(".gauge") as HTMLElement;
 const deadGauge = deadReadout.closest(".gauge") as HTMLElement;
+const thrashGauge = thrashReadout.closest(".gauge") as HTMLElement;
 
 const observed = [
   need("plan"),
@@ -99,6 +106,8 @@ function facts(event: InteractionEvent): string {
       return `${(event.duration / 1000).toFixed(1)}s without acting`;
     case "deadclick":
       return `nothing changed in ${event.timeout}ms`;
+    case "thrash":
+      return `${event.reversals} direction changes, ${event.distance}px`;
   }
 }
 
@@ -172,6 +181,12 @@ observer.on("deadclick", () => {
   setState(deadGauge, "hit");
   deadReadout.textContent = "dead, nothing happened";
   window.setTimeout(restoreDeadGauge, 2500);
+});
+
+observer.on("thrash", (event) => {
+  setState(thrashGauge, "hit");
+  thrashFill.style.width = "100%";
+  thrashReadout.textContent = `${event.reversals} changes reported`;
 });
 
 function restoreDeadGauge(): void {
@@ -250,6 +265,51 @@ function drawHesitation(now: number): boolean {
   return elapsed < CONFIG.hesitation.threshold + 200;
 }
 
+/** Mirrors the thrash detector: reversals are direction changes over 90deg. */
+const THRASH_NOISE = 8;
+let trailLast: { x: number; y: number } | null = null;
+let trailHeading: { x: number; y: number } | null = null;
+let reversals: number[] = [];
+
+function trackMovement(event: MouseEvent): void {
+  const point = { x: event.clientX, y: event.clientY };
+  if (!trailLast) {
+    trailLast = point;
+    return;
+  }
+
+  const step = { x: point.x - trailLast.x, y: point.y - trailLast.y };
+  if (Math.hypot(step.x, step.y) < THRASH_NOISE) return;
+
+  if (trailHeading && step.x * trailHeading.x + step.y * trailHeading.y < 0) {
+    reversals.push(performance.now());
+  }
+  trailLast = point;
+  trailHeading = step;
+  schedule();
+}
+
+function endTrail(): void {
+  trailLast = null;
+  trailHeading = null;
+  reversals = [];
+  thrashFill.style.width = "0%";
+  setState(thrashGauge, null);
+  thrashReadout.textContent = IDLE.thrash;
+}
+
+function drawThrash(now: number): boolean {
+  reversals = reversals.filter((time) => now - time <= CONFIG.thrash.interval);
+  if (reversals.length === 0) return false;
+
+  if (thrashGauge.dataset.state !== "hit") {
+    setState(thrashGauge, "live");
+    thrashFill.style.width = `${Math.min(reversals.length / CONFIG.thrash.reversals, 1) * 100}%`;
+    thrashReadout.textContent = `${reversals.length} of ${CONFIG.thrash.reversals} direction changes`;
+  }
+  return true;
+}
+
 let watching: { start: number } | null = null;
 
 function drawDead(now: number): boolean {
@@ -284,8 +344,9 @@ function tick(): void {
   const rage = drawRage(now);
   const hesitation = drawHesitation(now);
   const dead = drawDead(now);
+  const thrash = drawThrash(now);
 
-  if (rage || hesitation || dead) schedule();
+  if (rage || hesitation || dead || thrash) schedule();
 }
 
 // Every observed control feeds the gauges, so the inspector always describes
@@ -310,7 +371,12 @@ for (const target of observed) {
     schedule();
   });
 
-  target.addEventListener("pointerleave", endDwell);
+  target.addEventListener("pointermove", trackMovement);
+
+  target.addEventListener("pointerleave", () => {
+    endDwell();
+    endTrail();
+  });
 }
 
 // --------------------------------------------------------- page behaviour
@@ -338,6 +404,7 @@ install.addEventListener("click", () => {
 });
 
 endDwell();
+endTrail();
 drawRage(performance.now());
 
 // Built from CONFIG so the page cannot document thresholds it is not using.
@@ -353,6 +420,7 @@ need("code").innerHTML = `<b>import</b> {
     timeout: <i>${CONFIG.deadClick.timeout}</i>,
     ignore: "[data-io-ignore]",
   },
+  thrash: { reversals: <i>${CONFIG.thrash.reversals}</i> },
 });
 
 observer.on("*", (event) =&gt; {

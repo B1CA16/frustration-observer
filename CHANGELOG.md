@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project uses
 [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.3.0
+
+### Added
+
+- `thrash` detection: the pointer shaken back and forth over one spot, the
+  fourth classic frustration signal. Reports `reversals`, `duration` and
+  `distance`, and is configurable through `thrash: { reversals, interval }`.
+- The `pointermove` listener behind it is attached only when the detector is
+  enabled, so `thrash: false` costs nothing.
+
+An addition. Everything written against 1.2.0 keeps working.
+
 ## 1.2.0
 
 ### Added

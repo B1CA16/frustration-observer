@@ -7,6 +7,7 @@ import type {
   HesitationOptions,
   InteractionObserverOptions,
   RageClickOptions,
+  ThrashOptions,
 } from "./types.js";
 
 const PREFIX = "[frustration-observer]";
@@ -21,6 +22,11 @@ export interface ResolvedHesitationOptions {
   threshold: number;
 }
 
+export interface ResolvedThrashOptions {
+  reversals: number;
+  interval: number;
+}
+
 export interface ResolvedDeadClickOptions {
   timeout: number;
   ignore: string | undefined;
@@ -31,12 +37,14 @@ export interface ResolvedOptions {
   rageClick: ResolvedRageClickOptions | null;
   hesitation: ResolvedHesitationOptions | null;
   deadClick: ResolvedDeadClickOptions | null;
+  thrash: ResolvedThrashOptions | null;
 }
 
 export const DEFAULTS = {
   rageClick: { clicks: 3, interval: 1000, radius: 30 },
   hesitation: { threshold: 2000 },
   deadClick: { timeout: 1000, ignore: undefined },
+  thrash: { reversals: 6, interval: 1000 },
 } as const satisfies ResolvedOptions;
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -75,11 +83,7 @@ function readDistance(value: unknown, path: string, fallback: number): number {
   return value;
 }
 
-function readClickCount(
-  value: unknown,
-  path: string,
-  fallback: number,
-): number {
+function readCount(value: unknown, path: string, fallback: number): number {
   if (value === undefined) return fallback;
   if (typeof value !== "number") {
     throw new TypeError(
@@ -147,7 +151,7 @@ export function resolveOptions(
       options.rageClick,
       "rageClick",
       (raw) => ({
-        clicks: readClickCount(
+        clicks: readCount(
           raw.clicks,
           "rageClick.clicks",
           DEFAULTS.rageClick.clicks,
@@ -187,6 +191,23 @@ export function resolveOptions(
           DEFAULTS.deadClick.timeout,
         ),
         ignore: readSelector(raw.ignore, "deadClick.ignore"),
+      }),
+    ),
+
+    thrash: readSection<ThrashOptions, ResolvedThrashOptions>(
+      options.thrash,
+      "thrash",
+      (raw) => ({
+        reversals: readCount(
+          raw.reversals,
+          "thrash.reversals",
+          DEFAULTS.thrash.reversals,
+        ),
+        interval: readDuration(
+          raw.interval,
+          "thrash.interval",
+          DEFAULTS.thrash.interval,
+        ),
       }),
     ),
   };
