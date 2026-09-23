@@ -1,7 +1,7 @@
 {
   "name": "frustration-observer",
-  "version": "1.2.0",
-  "description": "Detect rage clicks, hesitation and dead clicks on any DOM element. Framework-agnostic, zero dependencies.",
+  "version": "1.3.0",
+  "description": "Detect rage clicks, hesitation, dead clicks and mouse thrashing on any DOM element. Framework-agnostic, zero dependencies.",
   "keywords": [
     "rage-click",
     "dead-click",

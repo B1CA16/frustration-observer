@@ -13,6 +13,12 @@ export interface Detector {
   onEnter?(target: Element, event: MouseEvent): void;
   /** The pointer left an observed element entirely. */
   onLeave?(target: Element): void;
+  /**
+   * The pointer moved inside an observed element. Implementing this is what
+   * makes the observer listen for pointermove at all, so a detector that does
+   * not need it costs nothing.
+   */
+  onMove?(target: Element, event: MouseEvent): void;
   /** An element stopped being observed; drop any state held for it. */
   onUnobserve?(target: Element): void;
   /**

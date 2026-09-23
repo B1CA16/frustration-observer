@@ -4,6 +4,7 @@ import type { Detector } from "./detector.js";
 import { createDeadClickDetector } from "./detectors/dead-click.js";
 import { createHesitationDetector } from "./detectors/hesitation.js";
 import { createRageClickDetector } from "./detectors/rage-click.js";
+import { createThrashDetector } from "./detectors/thrash.js";
 import { createObserver } from "./observer.js";
 import { resolveOptions } from "./options.js";
 import type {
@@ -45,6 +46,9 @@ export function createInteractionObserver(
     if (resolved.deadClick) {
       detectors.push(createDeadClickDetector(resolved.deadClick, emit));
     }
+    if (resolved.thrash) {
+      detectors.push(createThrashDetector(resolved.thrash, emit));
+    }
     return detectors;
   });
 }
@@ -65,5 +69,7 @@ export type {
   Point,
   RageClickEvent,
   RageClickOptions,
+  ThrashEvent,
+  ThrashOptions,
   Unsubscribe,
 } from "./types.js";

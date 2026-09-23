@@ -29,6 +29,7 @@ observer.observe(document.querySelector("#buy")!);
 | `rageclick`  | Several clicks land on one element, in one spot, inside a short window. |
 | `hesitation` | The pointer rests on an element for a while without acting.             |
 | `deadclick`  | A click is followed by nothing changing on the page.                    |
+| `thrash`     | The pointer is shaken back and forth over one spot.                     |
 
 ## Why it exists
 
@@ -112,6 +113,8 @@ button is reported as a click on the button.
 | `hesitation.threshold` | `number` | `2000`  | Milliseconds the pointer must rest before hesitating.               |
 | `deadClick.timeout`    | `number` | `1000`  | Milliseconds to wait for the page to react.                         |
 | `deadClick.ignore`     | `string` | none    | CSS selector for elements whose changes do not count as a reaction. |
+| `thrash.reversals`     | `number` | `6`     | Direction changes required before movement counts as thrashing.     |
+| `thrash.interval`      | `number` | `1000`  | Milliseconds the direction changes must fall inside.                |
 
 Unusable values are rejected when the observer is created, not silently
 ignored: a `TypeError` for the wrong type, a `RangeError` for a number that
@@ -150,7 +153,21 @@ interface DeadClickEvent {
   timeout: number; // milliseconds waited before giving up
   position: { x: number; y: number };
 }
+
+interface ThrashEvent {
+  type: "thrash";
+  target: Element;
+  selector: string;
+  timestamp: number;
+  reversals: number; // direction changes counted
+  duration: number; // milliseconds the shaking lasted
+  distance: number; // pixels travelled while shaking
+}
 ```
+
+Thrash detection is the only detector that reacts to pointer movement, so the
+`pointermove` listener is attached only when it is enabled. Running with
+`thrash: false` costs nothing at all.
 
 A rage click is reported once per burst, one interval after the last click, so
 the count is the whole burst rather than the moment the threshold was crossed.
@@ -193,8 +210,14 @@ These come from what a browser can actually see, and are not planned to change.
   clipboard or playing audio changes nothing observable.
 - **Slow responses look dead.** A click that starts a two second request with a
   one second `timeout` is reported as a dead click.
-- **Hesitation needs a hover-capable pointer**, so it does not fire on touch
-  screens.
+- **Hesitation and thrashing need a hover-capable pointer**, so neither fires
+  on touch screens.
+- **Thrashing is a judgement call, not a fact.** The defaults were chosen by
+  replaying ordinary movement: a straight run, a curve towards a target, a hand
+  resting on the mouse and moving through a form all produce zero reversals,
+  while scanning a list or overshooting a small target peaks at two. Deliberate
+  shaking produces eight. Six sits in that gap, and the tests replay every one
+  of those paths.
 
 ## Non-goals
 
