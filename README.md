@@ -5,8 +5,10 @@
 [![minzipped size](https://img.shields.io/bundlejs/size/frustration-observer)](https://bundlejs.com/?q=frustration-observer)
 [![license](https://img.shields.io/npm/l/frustration-observer?cacheSeconds=3600)](LICENSE)
 
-Detect rage clicks, hesitation and dead clicks on any DOM element. 2.5 KB
-minified and gzipped, no dependencies, no framework.
+[![frustration-observer: rage click, hesitation, thrashing and dead click detection in 3.3 kB, zero dependencies, MIT](https://raw.githubusercontent.com/B1CA16/frustration-observer/main/docs/banner.png)](https://b1ca16.github.io/frustration-observer/)
+
+Detect rage clicks, hesitation, dead clicks and mouse thrashing on any DOM
+element. 3.3 KB minified and gzipped, no dependencies, no framework.
 
 **[Try the live demo](https://b1ca16.github.io/frustration-observer/)**
 
@@ -30,6 +32,11 @@ observer.observe(document.querySelector("#buy")!);
 | `hesitation` | The pointer rests on an element for a while without acting.             |
 | `deadclick`  | A click is followed by nothing changing on the page.                    |
 | `thrash`     | The pointer is shaken back and forth over one spot.                     |
+
+[![An example checkout beside the library's inspector, reporting a dead click, a rage click of five clicks, and two seconds of hesitation](https://raw.githubusercontent.com/B1CA16/frustration-observer/main/docs/demo.png)](https://b1ca16.github.io/frustration-observer/)
+
+_The demo: an ordinary checkout with three controls that do nothing, and the
+library reporting what it sees._
 
 ## Why it exists
 

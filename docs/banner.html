@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>frustration-observer social preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Sized to exactly 1280x640, GitHub's social preview ratio. Screenshot
+         the card, or the whole viewport at that size. */
+      :root {
+        --lib: #0f1620;
+        --lib-raised: #172130;
+        --lib-edge: #26313f;
+        --lib-ink: #eaf0f7;
+        --lib-ink-2: #9aaaba;
+        --rage: #ff6f4d;
+        --hesitate: #ffc857;
+        --dead: #a9b4ff;
+        --thrash: #5fd3bc;
+        --sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+        --mono: "IBM Plex Mono", Consolas, ui-monospace, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #05080d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: var(--sans);
+      }
+
+      .card {
+        position: relative;
+        width: 1280px;
+        height: 640px;
+        padding: 72px 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: var(--lib);
+        color: var(--lib-ink);
+        overflow: hidden;
+      }
+
+      /* Faint instrument grid, the same idea as the demo's dark surfaces. */
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(234, 240, 247, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(234, 240, 247, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 40px 40px;
+      }
+
+      .card > * {
+        position: relative;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 82px;
+        font-weight: 700;
+        font-variation-settings: "wdth" 116;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+
+      .lede {
+        margin: 26px 0 0;
+        max-width: 22ch;
+        font-size: 30px;
+        line-height: 1.32;
+        color: var(--lib-ink);
+      }
+
+      .detectors {
+        display: flex;
+        gap: 14px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .detector {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 15px 18px;
+        border: 1px solid var(--lib-edge);
+        border-radius: 10px;
+        background: var(--lib-raised);
+        font-size: 19px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .detector svg {
+        width: 22px;
+        height: 22px;
+        color: var(--signal);
+      }
+
+      .detector:nth-child(1) {
+        --signal: var(--rage);
+      }
+      .detector:nth-child(2) {
+        --signal: var(--hesitate);
+      }
+      .detector:nth-child(3) {
+        --signal: var(--thrash);
+      }
+      .detector:nth-child(4) {
+        --signal: var(--dead);
+      }
+
+      .foot {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        font-family: var(--mono);
+        font-size: 21px;
+        color: var(--lib-ink-2);
+      }
+
+      .install {
+        color: var(--lib-ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <svg width="0" height="0" aria-hidden="true" style="position: absolute">
+        <symbol id="icon-rage" viewBox="0 0 20 20">
+          <path
+            d="M5 3.2 L5 15.6 L8.1 12.5 L10.2 16.4 L12.1 15.4 L10 11.5 L14.4 11.1 Z"
+            fill="currentColor"
+          />
+          <path
+            d="M14.6 5.6 L16.8 3.8 M16.2 9.4 L19 9.2 M11.9 2.6 L12.4 0.4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="icon-hesitate" viewBox="0 0 20 20">
+          <circle
+            cx="10"
+            cy="10"
+            r="7.2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M10 5.6 L10 10.2 L13.2 12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="icon-thrash" viewBox="0 0 20 20">
+          <path
+            d="M2.5 13 L6.5 6 L10 14 L13.5 6 L17.5 13"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="icon-dead" viewBox="0 0 20 20">
+          <circle
+            cx="10"
+            cy="10"
+            r="7.2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M5.2 14.8 L14.8 5.2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </symbol>
+      </svg>
+
+      <div>
+        <h1>frustration-observer</h1>
+        <p class="lede">
+          Your analytics tell you people left. This tells you they were furious
+          when they did.
+        </p>
+      </div>
+
+      <ul class="detectors">
+        <li class="detector">
+          <svg aria-hidden="true"><use href="#icon-rage" /></svg>
+          Rage click
+        </li>
+        <li class="detector">
+          <svg aria-hidden="true"><use href="#icon-hesitate" /></svg>
+          Hesitation
+        </li>
+        <li class="detector">
+          <svg aria-hidden="true"><use href="#icon-thrash" /></svg>
+          Thrashing
+        </li>
+        <li class="detector">
+          <svg aria-hidden="true"><use href="#icon-dead" /></svg>
+          Dead click
+        </li>
+      </ul>
+
+      <div class="foot">
+        <span class="install">npm i frustration-observer</span>
+        <span>3.3 kB &middot; zero dependencies &middot; MIT</span>
+      </div>
+    </div>
+  </body>
+</html>
